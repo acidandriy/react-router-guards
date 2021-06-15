@@ -1,9 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo } from 'react';
-import { __RouterContext as RouterContext } from 'react-router';
-import { matchPath, Redirect, Route } from 'react-router-dom';
 import { ErrorPageContext, FromRouteContext, GuardContext, LoadingPageContext } from './contexts';
-import { usePrevious, useStateRef, useStateWhenMounted } from './hooks';
-import renderPage from './renderPage';
 import {
   GuardFunction,
   GuardProps,
@@ -14,6 +9,12 @@ import {
   NextPropsPayload,
   NextRedirectPayload,
 } from './types';
+import { Navigate, Route, matchPath } from 'react-router-dom';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import { usePrevious, useStateRef, useStateWhenMounted } from './hooks';
+
+import { __RouterContext as RouterContext } from 'react-router';
+import renderPage from './renderPage';
 
 type PageProps = NextPropsPayload;
 type RouteError = string | Record<string, any> | null;
@@ -174,7 +175,7 @@ const Guard: React.FunctionComponent<GuardProps> = ({ children, component, meta,
     const pathToMatch = typeof routeRedirect === 'string' ? routeRedirect : routeRedirect.pathname;
     const { path, isExact: exact } = routeProps.match;
     if (pathToMatch && !matchPath(pathToMatch, { path, exact })) {
-      return <Redirect to={routeRedirect} />;
+      return <Navigate to={routeRedirect} />;
     }
   }
   return (
